@@ -1,6 +1,7 @@
 version: "3"
 services:
   nginx:
+    container_name: nginx
     image: nginx:latest
     ports:
       - "80:80"
@@ -10,6 +11,7 @@ services:
       - express
 
   express:
+    container_name: express
     build: ./express
     environment:
       - DATABASE_URL=mysql://mysql:3306
@@ -20,6 +22,9 @@ services:
 
   mysql:
     image: mysql:8.2
+    container_name: mysql
+    env_file:
+      - ./.env
     ports:
       - "3306:3306"
     environment:
@@ -29,6 +34,8 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql/custom-entrypoint.sh:/usr/local/bin/custom-entrypoint.sh
+    command: ["/usr/local/bin/custom-entrypoint.sh"]
 
 volumes:
   mysql-data:

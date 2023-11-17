@@ -10,3 +10,9 @@ dlionのバックエンド
 ### docker関連のコマンド
 - docker-compose down --rmi all --volumes
     ボリューム, イメージ全削除
+
+### envの設定
+- 以下は例
+> MYSQL_ROOT_PASSWORD=password
+MYSQL_DATABASE=database
+DATABASE_URL="mysql://root:password@localhost:3306/database"

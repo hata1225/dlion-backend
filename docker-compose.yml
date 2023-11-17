@@ -1,41 +1,28 @@
 version: "3"
 services:
-  nginx:
-    container_name: nginx
-    image: nginx:latest
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - express
-
-  express:
-    container_name: express
-    build: ./express
-    environment:
-      - DATABASE_URL=mysql://mysql:3306
-    volumes:
-      - ./express:/usr/src/app
-    depends_on:
-      - mysql
-
   mysql:
-    image: mysql:8.2
     container_name: mysql
-    env_file:
-      - ./.env
+    image: mysql:8.2
     ports:
-      - "3306:3306"
+      - 3306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
-      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
       TZ: "Asia/Tokyo"
     volumes:
-      - mysql-data:/var/lib/mysql
-      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./mysql/custom-entrypoint.sh:/usr/local/bin/custom-entrypoint.sh
-    command: ["/usr/local/bin/custom-entrypoint.sh"]
-
+      - mysql:/var/lib/mysql
+      - ./docker/mysql/sql:/docker-entrypoint-initdb.d
+  express:
+    container_name: express
+    build:
+      context: .
+      dockerfile: ./dockerfiles/express.Dockerfile
+    depends_on:
+     - mysql
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    command: npx prisma studio
+    ports:
+      - 5555:5555
 volumes:
-  mysql-data:
+  mysql:

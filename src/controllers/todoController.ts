@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import TodoModel from '../models/todoModel';
+import { Request, Response } from "express";
+import TodoModel from "../models/todoModel";
 
 class TodoController {
   static async getAllTodos(req: Request, res: Response) {
@@ -8,12 +8,11 @@ class TodoController {
   }
 
   static async getTodoById(req: Request, res: Response) {
-    const id = parseInt(req.params.id);
-    const todo = await TodoModel.getTodoById(id);
+    const todo = await TodoModel.getTodoById(req.params.id);
     if (todo) {
       res.json(todo);
     } else {
-      res.status(404).send('Todo not found');
+      res.status(404).send("Todo not found");
     }
   }
 
@@ -24,15 +23,18 @@ class TodoController {
   }
 
   static async updateTodo(req: Request, res: Response) {
-    const id = parseInt(req.params.id);
-    const { title, description, completed } = req.body;
-    const updatedTodo = await TodoModel.updateTodo(id, title, description, completed);
+    const { id, title, description, completed } = req.body;
+    const updatedTodo = await TodoModel.updateTodo(
+      id,
+      title,
+      description,
+      completed
+    );
     res.json(updatedTodo);
   }
 
   static async deleteTodo(req: Request, res: Response) {
-    const id = parseInt(req.params.id);
-    await TodoModel.deleteTodo(id);
+    await TodoModel.deleteTodo(req.params.id);
     res.status(204).send();
   }
 }

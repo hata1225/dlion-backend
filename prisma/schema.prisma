@@ -12,8 +12,23 @@ generator client {
 }
 
 model Todo {
-  id        Int      @id @default(autoincrement())
-  title     String
-  description String
-  completed Boolean  @default(false)
+  id String @id @default(uuid())
+  title String? @db.VarChar(50)
+  description String? @db.VarChar(300)
+  completed Boolean @default(false)
+}
+
+model Post {
+  id String @id @default(uuid())
+  title String? @db.VarChar(50)
+  description String? @db.VarChar(300)
+}
+
+model User {
+  id String @id @default(uuid())
+  email String @unique @db.VarChar(100)
+  name String? @db.VarChar(100)
+  googleId String? @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

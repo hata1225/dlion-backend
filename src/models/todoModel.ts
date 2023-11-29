@@ -1,32 +1,37 @@
-import prisma from '../utils/db';
+import { prisma } from "../utils/db";
 
 class TodoModel {
   static async getAllTodos() {
     return prisma.todo.findMany();
   }
 
-  static async getTodoById(id: number) {
+  static async getTodoById(id: string) {
     return prisma.todo.findUnique({
-      where: { id }
+      where: { id },
     });
   }
 
   static async createTodo(title: string, description: string) {
     return prisma.todo.create({
-      data: { title, description }
+      data: { title, description },
     });
   }
 
-  static async updateTodo(id: number, title: string, description: string, completed: boolean) {
+  static async updateTodo(
+    id: string,
+    title: string,
+    description: string,
+    completed: boolean
+  ) {
     return prisma.todo.update({
       where: { id },
-      data: { title, description, completed }
+      data: { title, description, completed },
     });
   }
 
-  static async deleteTodo(id: number) {
+  static async deleteTodo(id: string) {
     return prisma.todo.delete({
-      where: { id }
+      where: { id },
     });
   }
 }

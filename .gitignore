@@ -2,3 +2,4 @@
 /express/package-lock.json
 node_modules
 dist
+prisma/migrations/*

@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import mysql from "mysql2/promise";
+import { PrismaClient } from "@prisma/client"
+import mysql from "mysql2/promise"
 
 // .envファイルからデータベース設定を読み込む
 const pool = mysql.createPool({
@@ -10,8 +10,8 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-});
+})
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
-export { pool, prisma };
+export { pool, prisma }

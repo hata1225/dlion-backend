@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import TodoModel from "../models/todoModel";
+import TodoModel from "models/todoModel";
 
 class TodoController {
   static async getAllTodos(req: Request, res: Response) {

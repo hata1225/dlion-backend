@@ -7,7 +7,11 @@
     "strict": true, // 厳格な型チェック
     "esModuleInterop": true, // デフォルトのインポートとエクスポートの振る舞い
     "skipLibCheck": true, // 宣言ファイルのチェックをスキップ
-    "forceConsistentCasingInFileNames": true // ファイル名の大文字小文字の一貫性を強制
+    "forceConsistentCasingInFileNames": true, // ファイル名の大文字小文字の一貫性を強制
+    "baseUrl": "./src", // プロジェクトルートを基準にする
+    "paths": {
+      "*": ["*"]
+    }
   },
   "include": ["src/**/*"], // コンパイルするファイル
   "exclude": ["node_modules", "dist"] // コンパイルから除外するファイル

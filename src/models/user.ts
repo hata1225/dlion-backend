@@ -1,6 +1,7 @@
 import { randomBytes } from "crypto"
 import { RowDataPacket } from "mysql2"
 import { pool } from "utils/db"
+import express from "express"
 
 
 /**
@@ -30,4 +31,26 @@ const isExistAccountName = async (accountName: string) => {
     const [results] = await pool.execute<RowDataPacket[]>(query, [accountName])
 
     return results.length > 0
+}
+
+
+/**
+ * ### 認証済みかどうかのチェック
+ */
+export const isAuthenticated = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (req.isAuthenticated()) {
+      return next() // 認証されている場合は次の処理に移行
+    }
+    res.status(403).send("Forbidden") // 認証されていない場合はアクセスを拒否
+}
+
+
+/**
+ * ### 管理者かどうかのチェック
+ */
+export const isAdmin = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (req.isAuthenticated() && req.user?.isAdmin) {
+      return next() // 管理者の場合は次の処理に移行
+    }
+    res.status(403).send("Forbidden") // 管理者以外のアクセスを拒否
 }

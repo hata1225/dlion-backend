@@ -36,24 +36,22 @@ passport.use(
   )
 )
 
-
-// セッションにユーザー情報を保存
+// セッションにユーザーIDを保存
 passport.serializeUser((user, done) => {
-  done(null, user)
+  done(null, user.id) // ユーザーIDを渡す
 })
 
-
-// セッションからユーザー情報を取り出す
+// セッションからユーザーIDを取り出す
 passport.deserializeUser(async (id: string, done) => {
   try {
     const user = await prisma.user.findUnique({ where: { id } })
-    if (user) {
-      done(null, user)
-    } else {
-      done(null, null) // ユーザーが見つからない場合
-    }
+    done(null, user) // ユーザー情報を渡す
   } catch (error) {
-    done(error)
+    if (error instanceof Error) {
+      done(error) // エラーをError型として扱う
+    } else {
+      done(new Error("Unknown error occurred")) // 未知のエラーの場合
+    }
   }
 })
 

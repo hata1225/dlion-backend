@@ -21,8 +21,8 @@ services:
       - mysql
     environment:
       DATABASE_URL: ${DATABASE_URL}
-    command: npx prisma studio
-    ports:
+    ports: # ホスト側:コンテナ側
       - 5555:5555
+      - 8000:${PORT}
 volumes:
   mysql:

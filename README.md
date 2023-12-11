@@ -20,3 +20,8 @@ dlion のバックエンド
   > MYSQL_ROOT_PASSWORD=password
   > MYSQL_DATABASE=database
   > DATABASE_URL="mysql://root:password@localhost:3306/database"
+  > SESSION_SECRET=SESSION_SECRET
+  > GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID
+  > GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET
+  > PORT=3000
+  > GOOGLE_CALLBACK_PATH=/auth/google/callback

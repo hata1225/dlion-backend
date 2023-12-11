@@ -1,13 +1,14 @@
 import express from "express"
-import authRoutes from "routes/authRoutes"
+import authRoutes from "./routes/authRoutes"
 import dotenv from "dotenv"
 import passport from "passport"
 import session from "express-session"
+import "./config/passport";
 
 dotenv.config()
 const app = express()
 app.use(express.json())
-app.use("/auth",authRoutes)
+app.use("/api",authRoutes)
 app.use(
     session(
         {

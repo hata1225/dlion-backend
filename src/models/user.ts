@@ -1,6 +1,6 @@
 import { randomBytes } from "crypto"
 import { RowDataPacket } from "mysql2"
-import { pool } from "utils/db"
+import { pool } from "../utils/db"
 import express from "express"
 
 
@@ -26,7 +26,7 @@ export const craeteRandomAccountName = async () => {
 /**
  * ### accountNameの重複チェック
  */
-const isExistAccountName = async (accountName: string) => {
+export const isExistAccountName = async (accountName: string) => {
     const query = "SELECT 1 FROM users WHERE account_name = ? LIMIT 1"
     const [results] = await pool.execute<RowDataPacket[]>(query, [accountName])
 

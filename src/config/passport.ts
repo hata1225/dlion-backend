@@ -1,7 +1,7 @@
 import passport from "passport"
 import { Strategy as GoogleStrategy } from "passport-google-oauth20"
-import { createUser } from "controllers/userController"
-import { prisma } from "utils/db"
+import { createUser } from "../controllers/userController"
+import { prisma } from "../utils/db"
 
 // Passportの設定
 passport.use(
@@ -9,7 +9,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID ?? "", // Google Cloud Platformで取得したクライアントID
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "", // Google Cloud Platformで取得したクライアントシークレット
-      callbackURL: "http://localhost:3000/auth/google/callback" ?? "", // Googleからの認証応答を受け取るURL
+      callbackURL: `http://localhost:${process.env.PORT}${process.env.GOOGLE_CALLBACK_PATH}` ?? "", // Googleからの認証応答を受け取るURL
     },
     // Googleからの認証応答を受け取った後の処理
     async (accessToken, refreshToken, profile, done) => {

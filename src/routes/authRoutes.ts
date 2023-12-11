@@ -3,19 +3,20 @@ import passport from "passport"
 
 const router = express.Router()
 
+
 // Google認証のためのルーティング
-// GET http://localhost:3000/auth/google
+// GET http://localhost:3000/api/auth/google/login
 router.get(
-  "/google",
+  "/auth/google/login",
   passport.authenticate("google", {
     scope: ["profile", "email"]
   })
 )
 
 // Google認証のコールバック
-// GET http://localhost:3000/auth/google/callback
+// GET http://localhost:3000/api/auth/google/callback
 router.get(
-  "/google/callback",
+  process.env.GOOGLE_CALLBACK_PATH ?? "",
   passport.authenticate("google", {
     failureRedirect: "/login", // 認証失敗時のリダイレクト先
     session: false // セッションを使わない

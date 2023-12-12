@@ -1,5 +1,6 @@
 import express from "express"
 import authRoutes from "./routes/authRoutes"
+import postRoutes from "./routes/postRoutes"
 import dotenv from "dotenv"
 import passport from "passport"
 import session from "express-session"
@@ -9,6 +10,7 @@ dotenv.config()
 const app = express()
 app.use(express.json())
 app.use("/api",authRoutes)
+app.use("/api",postRoutes)
 app.use(
     session(
         {

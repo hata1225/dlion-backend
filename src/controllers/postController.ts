@@ -8,13 +8,12 @@ import { isPostOwnedByUser } from "../models/post"
  * - title, descriptionのいずれかがnullの場合はエラー
  */
 export const createPost = async (title: Post["title"], description: Post["description"], userId: Post["userId"]) => {
-
-    if(!title || !description){
+    if (!title || !description) {
         throw new Error("title or description is null")
     }
 
     const post = await prisma.post.create({
-        data: { title, description, userId }
+        data: { title, description, userId },
     })
 
     return post
@@ -29,8 +28,7 @@ export const createPost = async (title: Post["title"], description: Post["descri
  * - 投稿は作成日時の降順で取得
  */
 export const getPosts = async (limit?: string | number, offset?: string | number) => {
-
-    if(!limit || !offset){
+    if (!limit || !offset) {
         throw new Error("limit or offset is null")
     }
 
@@ -38,7 +36,7 @@ export const getPosts = async (limit?: string | number, offset?: string | number
         take: limit ? Number(limit) : undefined,
         skip: offset ? Number(offset) : undefined,
         orderBy: { createdAt: "desc" },
-        include: { user: true }
+        include: { user: true },
     })
 
     return posts
@@ -54,19 +52,25 @@ export const getPosts = async (limit?: string | number, offset?: string | number
  *    - 2つ以上指定されている場合はエラー
  *    - userId, userName, userAccountNameすべてがnullの場合はエラー
  */
-export const getPostsByUser = async (userId?: User["userId"], userName?: User["name"], userAccountName?: User["accountName"], limit?: string | number, offset?: string | number) => {
+export const getPostsByUser = async (
+    userId?: User["userId"],
+    userName?: User["name"],
+    userAccountName?: User["accountName"],
+    limit?: string | number,
+    offset?: string | number,
+) => {
     // userId, userName, userAccountNameすべてがnullの場合はエラー
-    if(!userId && !userName && !userAccountName){
+    if (!userId && !userName && !userAccountName) {
         throw new Error("userId, userName, userAccountName are all null")
     }
 
     // 2つ以上指定されている場合はエラー
-    if((userId && userName) || (userId && userAccountName) || (userName && userAccountName)){
+    if ((userId && userName) || (userId && userAccountName) || (userName && userAccountName)) {
         throw new Error("userId, userName, userAccountName are all not null")
     }
 
     // limit, offsetのいずれかがnullの場合はエラー
-    if(!limit || !offset){
+    if (!limit || !offset) {
         throw new Error("limit or offset is null")
     }
 
@@ -75,13 +79,13 @@ export const getPostsByUser = async (userId?: User["userId"], userName?: User["n
             userId: userId ?? undefined,
             user: {
                 name: userName ?? undefined,
-                accountName: userAccountName ?? undefined
-            }
+                accountName: userAccountName ?? undefined,
+            },
         },
         take: limit ? Number(limit) : undefined,
         skip: offset ? Number(offset) : undefined,
         orderBy: { createdAt: "desc" },
-        include: { user: true }
+        include: { user: true },
     })
 
     return posts
@@ -92,17 +96,16 @@ export const getPostsByUser = async (userId?: User["userId"], userName?: User["n
  * - idで投稿を取得
  */
 export const getPostByPostId = async (postId?: Post["postId"]) => {
-
-    if(!postId){
+    if (!postId) {
         throw new Error("postId is null")
     }
 
     const post = await prisma.post.findUnique({
         where: { postId },
-        include: { user: true }
+        include: { user: true },
     })
 
-    if(!post){
+    if (!post) {
         throw new Error("Post not found")
     }
 
@@ -116,33 +119,31 @@ export const getPostByPostId = async (postId?: Post["postId"]) => {
  *     - 自分自身の投稿かどうかのチェックを行う
  */
 export const deletePostByPostId = async (postId?: Post["postId"], userId?: Post["userId"]) => {
-
-    if(!postId){
+    if (!postId) {
         throw new Error("postId is null")
     }
 
-    if(!userId){
+    if (!userId) {
         throw new Error("userId is null")
     }
 
     const isMyPost = await isPostOwnedByUser(postId, userId)
 
-    if(!isMyPost){
+    if (!isMyPost) {
         throw new Error("This is not my post")
     }
 
     const post = await prisma.post.update({
         where: { postId },
-        data: { deletedAt: new Date() }
+        data: { deletedAt: new Date() },
     })
 
-    if(!post){
+    if (!post) {
         throw new Error("Post not found")
     }
 
     return post
 }
-
 
 /**
  * ### 投稿を更新
@@ -151,28 +152,32 @@ export const deletePostByPostId = async (postId?: Post["postId"], userId?: Post[
  * - 自分自身の投稿のみ削除可能
  *     - 自分自身の投稿かどうかのチェックを行う
  */
-export const updatePostByPostId = async (postId?: Post["postId"], userId?: User["userId"], title?: Post["title"], description?: Post["description"]) => {
-
-    if(!postId){
+export const updatePostByPostId = async (
+    postId?: Post["postId"],
+    userId?: User["userId"],
+    title?: Post["title"],
+    description?: Post["description"],
+) => {
+    if (!postId) {
         throw new Error("postId is null")
     }
 
-    if(!title || !description){
+    if (!title || !description) {
         throw new Error("title or description is null")
     }
 
     const isMyPost = await isPostOwnedByUser(postId, userId)
 
-    if(!isMyPost){
+    if (!isMyPost) {
         throw new Error("This is not my post")
     }
 
     const post = await prisma.post.update({
         where: { postId },
-        data: { title, description }
+        data: { title, description },
     })
 
-    if(!post){
+    if (!post) {
         throw new Error("Post not found")
     }
 

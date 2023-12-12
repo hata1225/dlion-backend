@@ -22,7 +22,7 @@ router.get(
     session: false // セッションを使わない
   }),
   (req, res) => {
-    const userId = req.user?.id
+    const userId = req.user?.userId
     if(userId){
       req.session.id = userId
       res.redirect("/") // 認証成功

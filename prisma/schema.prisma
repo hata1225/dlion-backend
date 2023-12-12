@@ -14,11 +14,11 @@ generator client {
 
 // 投稿
 model Post {
-  id String @id @default(uuid())
+  postId String @id @default(uuid()) @map("post_id")
   title String? @db.VarChar(50)
   description String? @db.VarChar(1000)
   userId String @map("user_id")
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [userId])
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
@@ -29,7 +29,7 @@ model Post {
 
 // ユーザー
 model User {
-  id String @id @default(uuid())
+  userId String @id @default(uuid()) @map("user_id")
   email String @unique @db.VarChar(255)
   name String @db.VarChar(50)
   accountName String @unique @db.VarChar(20) @map("account_name")

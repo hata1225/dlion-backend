@@ -1,6 +1,6 @@
 import { randomBytes } from "crypto"
 import { RowDataPacket } from "mysql2"
-import { pool } from "../utils/db"
+import { executeQuery } from "../utils/db"
 import express from "express"
 import { User } from "@prisma/client"
 
@@ -28,7 +28,7 @@ export const craeteRandomAccountName = async () => {
  */
 export const isExistAccountName = async (accountName: User["accountName"]) => {
     const query = "SELECT 1 FROM users WHERE account_name = ? LIMIT 1"
-    const [results] = await pool.execute<RowDataPacket[]>(query, [accountName])
+    const results = await executeQuery<RowDataPacket[]>(query, [accountName])
 
     return results.length > 0
 }

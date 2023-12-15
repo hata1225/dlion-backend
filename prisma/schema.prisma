@@ -12,13 +12,13 @@ generator client {
 }
 
 
+// Post
 // 投稿
 model Post {
   postId String @id @default(uuid()) @map("post_id")
-  title String? @db.VarChar(50)
-  description String? @db.VarChar(1000)
+  title String? @db.VarChar(50) @map("title")
+  description String? @db.VarChar(1000) @map("description")
   userId String @map("user_id")
-  user User @relation(fields: [userId], references: [userId])
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
@@ -27,7 +27,8 @@ model Post {
 }
 
 
-// ユーザー
+// User
+// ユーザー情報
 model User {
   userId String @id @default(uuid()) @map("user_id")
   email String @unique @db.VarChar(255)
@@ -35,7 +36,6 @@ model User {
   accountName String @unique @db.VarChar(20) @map("account_name")
   googleId String? @unique @map("google_id")
   isAdmin Boolean @default(false) @map("is_admin")
-  posts Post[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")

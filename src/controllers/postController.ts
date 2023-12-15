@@ -1,5 +1,5 @@
 import { Post, User } from "@prisma/client"
-import { prisma, throwErrorIfFalsy } from "../utils/db"
+import { throwErrorIfFalsy } from "../utils/db"
 import { isPostOwnedByUser, createPostModel, getPostModelByPostId, getPostsModel, getPostsModelByUserId, getPostsModelByUserName, getPostsModelByAccountName, deletePostModelByPostId, updatePostModel } from "../models/post"
 
 /**
@@ -124,7 +124,6 @@ export const deletePostByPostId = async (postId: Post["postId"], userId: Post["u
         throw error
     }
 }
-
 
 /**
  * ### 投稿を更新

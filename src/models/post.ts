@@ -17,7 +17,7 @@ export const isPostOwnedByUser = async (postId: Post["postId"], userId: Post["us
         return results.length > 0
     } catch (error) {
         if(error instanceof Error){
-            throw new Error("@isPostOwnedByUser is error: ", error);
+            throw new Error(`@isPostOwnedByUser is error: ${error.message}`);
         } else {
             throw new Error("@isPostOwnedByUser is error.");
         }
@@ -39,7 +39,7 @@ export const getPostModelByPostId = async (postId: Post["postId"]) => {
         return results[0] as Post
     } catch (error) {
         if(error instanceof Error){
-            throw new Error("@getPostModelByPostId is error: ", error);
+            throw new Error(`@getPostModelByPostId is error: ${error.message}`);
         } else {
             throw new Error("@getPostModelByPostId is error.");
         }
@@ -62,7 +62,7 @@ export const getPostsModelByUserId = async (userId: Post["userId"], limit: numbe
         return results as Post[]
     } catch (error) {
         if(error instanceof Error){
-            throw new Error("@getPostsByUserId is error: ", error);
+            throw new Error(`@getPostsByUserId is error: ${error.message}`);
         } else {
             throw new Error("@getPostsByUserId is error.");
         }
@@ -81,7 +81,7 @@ export const getPostsModelByAccountName = async (accountName: User["accountName"
         return results as Post[]
     } catch (error) {
         if(error instanceof Error){
-            throw new Error("@getPostsByAccountName is error: ", error);
+            throw new Error(`@getPostsByAccountName is error: ${error.message}`);
         } else {
             throw new Error("@getPostsByAccountName is error.");
         }
@@ -100,7 +100,7 @@ export const getPostsModelByUserName = async (userName: User["name"], limit: str
         return results as Post[]
     } catch (error) {
         if(error instanceof Error){
-            throw new Error("@getPostsByUserName is error: ", error);
+            throw new Error(`@getPostsByUserName is error: ${error.message}`);
         } else {
             throw new Error("@getPostsByUserName is error.");
         }
@@ -126,7 +126,7 @@ export const getPostsModel = async (limit: number|string, offset: number|string)
         return results as Post[]
     } catch (error) {
         if(error instanceof Error){
-            throw new Error("@getPostsModel is error: ", error);
+            throw new Error(`@getPostsModel is error: ${error.message}`);
         } else {
             throw new Error("@getPostsModel is error.");
         }
@@ -161,7 +161,7 @@ export const createPostModel = async ( userId: Post["userId"], title: Post["titl
         await connection.rollback();
 
         if(error instanceof Error){
-            throw new Error("@createPostModel is error: ", error);
+            throw new Error(`@createPostModel is error: ${error.message}`);
         } else {
             throw new Error("@createPostModel is error.");
         }
@@ -182,7 +182,7 @@ export const updatePostModel = async (postId: Post["postId"], title: Post["title
         await connection.beginTransaction();
 
         let query = "UPDATE posts SET updated_at = NOW()"
-        const params = []
+        const params: string[] = []
         if(title !== null){
             query += ", title = ?"
             params.push(title)
@@ -204,7 +204,7 @@ export const updatePostModel = async (postId: Post["postId"], title: Post["title
         await connection.rollback();
 
         if(error instanceof Error){
-            throw new Error("@updatePostModel is error: ", error);
+            throw new Error(`@updatePostModel is error: ${error.message}`);
         } else {
             throw new Error("@updatePostModel is error.");
         }
@@ -233,7 +233,7 @@ export const deletePostModelByPostId = async (postId: Post["postId"]) => {
         await connection.rollback();
 
         if(error instanceof Error){
-            throw new Error("@deletePostModel is error: ", error);
+            throw new Error(`@deletePostModel is error: ${error.message}`);
         } else {
             throw new Error("@deletePostModel is error.");
         }

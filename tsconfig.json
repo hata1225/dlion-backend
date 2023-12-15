@@ -1,14 +1,14 @@
 {
-  "compilerOptions": {
-    "target": "esnext", // ECMAScriptのターゲットバージョン
-    "module": "nodenext", // モジュールシステム
-    "outDir": "./dist", // コンパイルされたファイルの出力ディレクトリ
-    "rootDir": "./src", // ソースファイルのルートディレクトリ
-    "strict": true, // 厳格な型チェック
-    "esModuleInterop": true, // デフォルトのインポートとエクスポートの振る舞い
-    "skipLibCheck": true, // 宣言ファイルのチェックをスキップ
-    "forceConsistentCasingInFileNames": true, // ファイル名の大文字小文字の一貫性を強制
-  },
-  "include": ["src/**/*"], // コンパイルするファイル
-  "exclude": ["node_modules", "dist"] // コンパイルから除外するファイル
+    "compilerOptions": {
+        "target": "esnext", // ECMAScriptのターゲットバージョン
+        "module": "nodenext", // モジュールシステム
+        "outDir": "./dist", // コンパイルされたファイルの出力ディレクトリ
+        "rootDir": "./src", // ソースファイルのルートディレクトリ
+        "strict": true, // 厳格な型チェック
+        "esModuleInterop": true, // デフォルトのインポートとエクスポートの振る舞い
+        "skipLibCheck": true, // 宣言ファイルのチェックをスキップ
+        "forceConsistentCasingInFileNames": true // ファイル名の大文字小文字の一貫性を強制
+    },
+    "include": ["src/**/*"], // コンパイルするファイル
+    "exclude": ["node_modules", "dist"] // コンパイルから除外するファイル
 }

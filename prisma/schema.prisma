@@ -43,3 +43,17 @@ model User {
 
   @@map("users")
 }
+
+
+// PostLike
+// 投稿に対するいいね
+model Favorite {
+  favoriteId String @id @default(uuid()) @map("favorite_id")
+  postId String @map("post_id")
+  userId String @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("favorites")
+}

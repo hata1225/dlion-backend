@@ -1,9 +1,6 @@
-# ベースイメージの選択
 FROM node:21-slim
 
-# 必要なシステムライブラリのインストール
-RUN apt-get update && apt-get install -y openssl libssl-dev
-
+RUN apt-get update && apt-get install -y openssl libssl-dev netcat-traditional
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install

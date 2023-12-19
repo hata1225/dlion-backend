@@ -1,7 +1,7 @@
-import { Post, User } from "@prisma/client";
-import { executeQuery, pool, throwErrorIfFalsy } from "../utils/db";
-import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { v4 as uuidv4 } from "uuid";
+import { Post, User } from "@prisma/client"
+import { executeQuery, pool, throwErrorIfFalsy } from "../utils/db"
+import { ResultSetHeader, RowDataPacket } from "mysql2"
+import { v4 as uuidv4 } from "uuid"
 
 /**
  * ### 自分自身の投稿かどうかのチェック
@@ -14,9 +14,9 @@ export const isPostOwnedByUser = async (postId: Post["postId"], userId: Post["us
         return results.length > 0
     } catch (error) {
         if(error instanceof Error){
-            throw new Error(`@isPostOwnedByUser is error: ${error.message}`);
+            throw new Error(`@isPostOwnedByUser is error: ${error.message}`)
         } else {
-            throw new Error("@isPostOwnedByUser is error.");
+            throw new Error("@isPostOwnedByUser is error.")
         }
     }
 }
@@ -34,9 +34,9 @@ export const getPostModelByPostId = async (postId: Post["postId"]) => {
         return results[0] as Post
     } catch (error) {
         if(error instanceof Error){
-            throw new Error(`@getPostModelByPostId is error: ${error.message}`);
+            throw new Error(`@getPostModelByPostId is error: ${error.message}`)
         } else {
-            throw new Error("@getPostModelByPostId is error.");
+            throw new Error("@getPostModelByPostId is error.")
         }
     }
 }
@@ -57,9 +57,9 @@ export const getPostsModelByUserId = async (userId: Post["userId"], limit: numbe
         return results as Post[]
     } catch (error) {
         if(error instanceof Error){
-            throw new Error(`@getPostsByUserId is error: ${error.message}`);
+            throw new Error(`@getPostsByUserId is error: ${error.message}`)
         } else {
-            throw new Error("@getPostsByUserId is error.");
+            throw new Error("@getPostsByUserId is error.")
         }
     }
 }
@@ -76,9 +76,9 @@ export const getPostsModelByAccountName = async (accountName: User["accountName"
         return results as Post[]
     } catch (error) {
         if(error instanceof Error){
-            throw new Error(`@getPostsByAccountName is error: ${error.message}`);
+            throw new Error(`@getPostsByAccountName is error: ${error.message}`)
         } else {
-            throw new Error("@getPostsByAccountName is error.");
+            throw new Error("@getPostsByAccountName is error.")
         }
     }
 }
@@ -95,9 +95,9 @@ export const getPostsModelByUserName = async (userName: User["name"], limit: str
         return results as Post[]
     } catch (error) {
         if(error instanceof Error){
-            throw new Error(`@getPostsByUserName is error: ${error.message}`);
+            throw new Error(`@getPostsByUserName is error: ${error.message}`)
         } else {
-            throw new Error("@getPostsByUserName is error.");
+            throw new Error("@getPostsByUserName is error.")
         }
     }
 }
@@ -118,9 +118,9 @@ export const getPostsModel = async (limit: number|string, offset: number|string)
         return results as Post[]
     } catch (error) {
         if(error instanceof Error){
-            throw new Error(`@getPostsModel is error: ${error.message}`);
+            throw new Error(`@getPostsModel is error: ${error.message}`)
         } else {
-            throw new Error("@getPostsModel is error.");
+            throw new Error("@getPostsModel is error.")
         }
     }
 }
@@ -132,33 +132,32 @@ export const getPostsModel = async (limit: number|string, offset: number|string)
  * - titleとdescriptionは必須
  */
 export const createPostModel = async ( userId: Post["userId"], title: Post["title"], description: Post["description"] ) => {
-    const connection = await pool.getConnection();
+    const connection = await pool.getConnection()
 
     try {
-        await connection.beginTransaction();
+        await connection.beginTransaction()
 
         // 投稿を挿入
-        const postId = uuidv4(); // uuidを生成
-        const insertPostQuery = "INSERT INTO posts (post_id, user_id, title, description) VALUES (?, ?, ?, ?)";
-        await executeQuery<ResultSetHeader>(insertPostQuery, [postId, userId, title, description]);
+        const postId = uuidv4() // uuidを生成
+        const insertPostQuery = "INSERT INTO posts (post_id, user_id, title, description) VALUES (?, ?, ?, ?)"
+        await executeQuery<ResultSetHeader>(insertPostQuery, [postId, userId, title, description])
 
         // 投稿を取得
-        const selectPostQuery = "SELECT * FROM posts WHERE id = ?";
-        const posts = await executeQuery<RowDataPacket[]>(selectPostQuery, [postId]);
-        throwErrorIfFalsy(posts.length, "@createPostModel: Failed to create post.");
+        const post = await getPostModelByPostId(postId)
+        throwErrorIfFalsy(post, "@createPostModel: Failed to create post.")
 
-        await connection.commit();
-        return posts[0] as Post;
+        await connection.commit()
+        return post
     } catch (error) {
-        await connection.rollback();
+        await connection.rollback()
 
         if(error instanceof Error){
-            throw new Error(`@createPostModel is error: ${error.message}`);
+            throw new Error(`@createPostModel is error: ${error.message}`)
         } else {
-            throw new Error("@createPostModel is error.");
+            throw new Error("@createPostModel is error.")
         }
     } finally {
-        connection.release(); // 必ず接続を解放
+        connection.release() // 必ず接続を解放
     }
 }
 
@@ -168,18 +167,18 @@ export const createPostModel = async ( userId: Post["userId"], title: Post["titl
  * - title, descriptionがnullの場合は更新しない
  */
 export const updatePostModel = async (postId: Post["postId"], title: Post["title"], description: Post["description"]) => {
-    const connection = await pool.getConnection();
+    const connection = await pool.getConnection()
 
     try {
-        await connection.beginTransaction();
+        await connection.beginTransaction()
 
-        let query = "UPDATE posts SET updated_at = NOW()"
+        let query = "UPDATE posts SET updated_at = CURRENT_TIMESTAMP"
         const params: string[] = []
-        if(title !== null){
+        if(title !== null){ // titleがnullの場合は更新しない
             query += ", title = ?"
             params.push(title)
         }
-        if(description !== null){
+        if(description !== null){ // descriptionがnullの場合は更新しない
             query += ", description = ?"
             params.push(description)
         }
@@ -190,18 +189,17 @@ export const updatePostModel = async (postId: Post["postId"], title: Post["title
 
         const post = await getPostModelByPostId(postId)
 
-        await connection.commit();
+        await connection.commit()
         return post
     } catch (error) {
-        await connection.rollback();
-
+        await connection.rollback()
         if(error instanceof Error){
-            throw new Error(`@updatePostModel is error: ${error.message}`);
+            throw new Error(`@updatePostModel is error: ${error.message}`)
         } else {
-            throw new Error("@updatePostModel is error.");
+            throw new Error("@updatePostModel is error.")
         }
     } finally {
-        connection.release(); // 必ず接続を解放
+        connection.release() // 必ず接続を解放
     }
 }
 
@@ -210,26 +208,25 @@ export const updatePostModel = async (postId: Post["postId"], title: Post["title
  * - post_idで削除
  */
 export const deletePostModelByPostId = async (postId: Post["postId"]) => {
-    const connection = await pool.getConnection();
+    const connection = await pool.getConnection()
 
     try {
-        await connection.beginTransaction();
+        await connection.beginTransaction()
 
-        const query = "UPDATE posts SET deleted_at = NOW() WHERE post_id = ?"
+        const query = "UPDATE posts SET deleted_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP WHERE post_id = ?"
         const results = await executeQuery<ResultSetHeader>(query, [postId])
         throwErrorIfFalsy(results.affectedRows, "@deletePostModel: Post not found")
 
-        await connection.commit();
+        await connection.commit()
         return true
     } catch (error) {
-        await connection.rollback();
-
+        await connection.rollback()
         if(error instanceof Error){
-            throw new Error(`@deletePostModel is error: ${error.message}`);
+            throw new Error(`@deletePostModel is error: ${error.message}`)
         } else {
-            throw new Error("@deletePostModel is error.");
+            throw new Error("@deletePostModel is error.")
         }
     } finally {
-        connection.release(); // 必ず接続を解放
+        connection.release() // 必ず接続を解放
     }
 }

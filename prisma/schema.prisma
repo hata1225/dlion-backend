@@ -18,10 +18,14 @@ model Post {
   postId String @id @default(uuid()) @map("post_id")
   title String? @db.VarChar(50) @map("title")
   description String? @db.VarChar(1000) @map("description")
+  user User @relation(fields: [userId], references: [userId])
   userId String @map("user_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
+
+  favorites Favorite[]
+  postFilePaths PostFilePath[]
 
   @@map("posts")
 }
@@ -41,6 +45,10 @@ model User {
   updatedAt DateTime @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
+  posts Post[]
+  favorites Favorite[]
+  filePaths FilePath[]
+
   @@map("users")
 }
 
@@ -49,11 +57,47 @@ model User {
 // 投稿に対するいいね
 model Favorite {
   favoriteId String @id @default(uuid()) @map("favorite_id")
-  postId String @map("post_id")
-  userId String @map("user_id")
+  post Post @relation(fields: [postId], references: [postId])
+  postId String @map("post_id") // 投稿ID
+  user User @relation(fields: [userId], references: [userId])
+  userId String @map("user_id") // ユーザーID
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
   @@map("favorites")
+}
+
+
+// PostFilePath
+// 投稿とファイルパスの中間テーブル
+model PostFilePath {
+  postFilePathId String @id @default(uuid()) @map("post_file_path_id")
+  post Post @relation(fields: [postId], references: [postId])
+  postId String @map("post_id") // 投稿ID
+  filePath FilePath @relation(fields: [filePathId], references: [filePathId])
+  filePathId String @map("file_path_id") // ファイルパスID
+  fileType String @map("file_type") // ファイルタイプ, "image" | "video" | "audio" | "pdf" | "other"
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("post_file_paths")
+}
+
+
+// FilePath
+// ファイルパス
+model FilePath {
+  filePathId String @id @default(uuid()) @map("file_path_id")
+  filePath String @map("file_path") // ファイルパス
+  user User @relation(fields: [userId], references: [userId])
+  userId String @map("user_id") // ユーザーID
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  postFilePaths PostFilePath[]
+
+  @@map("file_paths")
 }

@@ -8,9 +8,6 @@ import { v4 as uuidv4 } from "uuid";
  */
 export const isPostOwnedByUser = async (postId: Post["postId"], userId: Post["userId"]) => {
     try {
-        throwErrorIfFalsy(postId, "@isPostOwnedByUser: postId is null")
-        throwErrorIfFalsy(userId, "@isPostOwnedByUser: userId is null")
-
         const query = "SELECT 1 FROM posts WHERE post_id = ? AND user_id = ? LIMIT 1"
         const results = await executeQuery<RowDataPacket[]>(query, [postId, userId])
 
@@ -30,8 +27,6 @@ export const isPostOwnedByUser = async (postId: Post["postId"], userId: Post["us
  */
 export const getPostModelByPostId = async (postId: Post["postId"]) => {
     try {
-        throwErrorIfFalsy(postId, "@getPostModelByPostId: postId is null")
-
         const query = "SELECT * FROM posts WHERE post_id = ?"
         const results = await executeQuery<RowDataPacket[]>(query, [postId])
         throwErrorIfFalsy(results.length, "@getPostModelByPostId: Post not found")
@@ -117,9 +112,6 @@ export const getPostsModelByUserName = async (userName: User["name"], limit: str
  */
 export const getPostsModel = async (limit: number|string, offset: number|string) => {
     try {
-        throwErrorIfFalsy(limit, "@getPostsModel: limit is null")
-        throwErrorIfFalsy(offset, "@getPostsModel: offset is null")
-
         const query = "SELECT * FROM posts ORDER BY created_at DESC LIMIT ? OFFSET ?"
         const results = await executeQuery<RowDataPacket[]>(query, [Number(limit), Number(offset)])
 

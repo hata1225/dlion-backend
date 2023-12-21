@@ -1,6 +1,6 @@
 import passport from "passport"
 import { Strategy as GoogleStrategy } from "passport-google-oauth20"
-import { createUser } from "../controllers/userController"
+import { UserService } from "../services/userService"
 import { prisma } from "../utils/db"
 
 // Passportの設定
@@ -17,12 +17,15 @@ passport.use(
         const googleId = profile.id
         const email = profile.emails?.[0].value ?? ""
         const name = profile.displayName
+        const userService = new UserService()
 
         // データベースでユーザーを検索（または新しいユーザーを作成）
-        let user = await prisma.user.findUnique({ where: { googleId } })
+        // let user = await prisma.user.findUnique({ where: { googleId } })
+        let user = await userService.getUserByGoogleId(googleId)
         if (!user) {
-          user = await createUser(email, null, name, googleId)
+          user = await new UserService().createUser(email, null, name, googleId) // アカウント名はランダムな文字列で作成
         }
+        if (!user) throw new Error("Failed to create user")
 
         done(null, user) // 認証成功
       } catch (error) {
@@ -44,7 +47,9 @@ passport.serializeUser((user, done) => {
 // セッションからユーザーIDを取得
 passport.deserializeUser(async (userId: string, done) => {
   try {
-    const user = await prisma.user.findUnique({ where: { userId } })
+    const userService = new UserService()
+    const user = await userService.getUserByUserId(userId)
+    if(!user) throw new Error("User not found")
     done(null, user) // ユーザーIDからユーザーを取得
   } catch (error) {
     if (error instanceof Error) {
